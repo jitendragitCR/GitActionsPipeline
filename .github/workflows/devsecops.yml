@@ -1,0 +1,85 @@
+name: Java CI/CD/CS with Maven, Security Gates, and AWS ECR
+
+on: workflow_dispatch
+
+env:
+  AWS_REGION: us-east-1                    # Your ECR AWS region
+  ECR_REPOSITORY: my-java-app-repo        # Your ECR repository name
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Pull code into the runner instance
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # 2. Setup the Java Runtime (Sets native system JAVA_HOME variables)
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    # 3. Natively install the Snyk CLI package into the runner space
+    - name: Install Snyk CLI Client
+      uses: snyk/actions/setup@master
+
+    # 4. Run dependency security test sharing the active environment context
+    - name: Run Snyk Dependency Scanner
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      run: snyk test --severity-threshold=high
+
+    # 5. Execute core Maven operational checks
+    - name: Build and Test with Maven
+      run: mvn clean test
+
+    # 6. Establish secure links to AWS cloud fabric
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    # 7. Complete automated cloud registry authentication logs
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Get ECR Password Token (Temporary for local setup)
+      run: |
+          echo "::add-mask::$(aws ecr get-login-password --region ${{ env.AWS_REGION }})"
+          echo "YOUR_LOCAL_TOKEN: $(aws ecr get-login-password --region ${{ env.AWS_REGION }})"      
+
+    # 8. Build target container distribution payloads
+    - name: Build Docker Image Locally
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+
+    # 9. Isolate OS level file configurations using Trivy
+    - name: Run Trivy Security Scanner
+      uses: aquasecurity/trivy-action@v0.36.0
+      with:
+        scan-type: 'image'
+        image-ref: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        format: 'table'
+        exit-code: '1' # Terminates script chain if severe image bugs exist
+        ignore-unfixed: true
+        severity: 'CRITICAL,HIGH'
+
+    # 10. Release clean verified tags to cloud storage registries
+    - name: Push Safe Image to Amazon ECR
+      if: success()
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
