@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage ('codecheckout') {
             steps{
-              checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ankvishwakarma/Mavenbuild.git',credentialsId: 'ankgit']])
+              checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jitendragitCR/GitActionsPipeline.git',credentialsId: 'jitendragitCR']])
             }
         }
         stage ('Build') {
@@ -32,7 +32,7 @@ pipeline {
                               echo 'Starting deployment sequence...'
                               # Clear target and copy file using absolute paths
                               rm -f /root/jenkins-data/tomcatwar/java-example.war
-                              cp -p ${env.WORKSPACE}/target/java-example.war /var/tomcatwar/
+                              cp -p ${env.WORKSPACE}/target/java-example.war /var/tomcatwar/java-example.war
 	     	        """
             }
         }    

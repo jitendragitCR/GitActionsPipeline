@@ -16,11 +16,11 @@ spec:
     spec:                  # FIX 1: Changed "the spec:" to just "spec:"
       containers:
       - name: java-app
-        image: 327709577232.dkr.ecr.us-east-1.amazonaws.com/my-java-app-repo:latest
+        image: 124280777176.dkr.ecr.us-east-1.amazonaws.com/my-java-app-repo:latest
         ports:
         - containerPort: 8080
       imagePullSecrets:    # FIX 2: Fixed indentation to line up under spec
-      - name: ecr-secret
+      - name: git-ecr-integrate-user
 ---
 apiVersion: v1
 kind: Service
