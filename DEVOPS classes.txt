@@ -1,0 +1,197 @@
+Route53:
+A
+CNAME
+
+Hosted zone or take from outside like GoDaddy.
+
+Routing policy:
+Failover
+Simple
+Weighted
+Geolocation
+
+Health Check ID - Pre-requisites
+
+
+Scheduled events:
+Activities-hardware etc
+Rule - downtime in weekend etc
+EventBridge
+ankit to check...
+
+Capacity reservations
+-GPU reserve for use
+
+On-demand...
+
+
+EC2:
+Advanced
+IAM instance profile...
+AMI - M/c image --- Amazon linux (based on redhat)
+Instance type - C or M category
+Compute optimized > Memory optimized (cost)
+Storage
+IAM profile
+Capacity (RAM/CPU)
+User-data (pre-requisites to run)
+Capacity reservation
+Termination protection
+Stop protection
+
+Call main template and override settings which we want to change....
+
+Tags:
+Costing
+Vulnerabilities
+Automation
+
+Systems manager:
+SSM:
+Parameter store: Encrypted/Secure things (costing is involved)
+Credentials etc.
+KMS Key... - Inside Code
+One time cost....
+Single key - single parameter....
+
+Secret Manager: More costly than parameter store. For less usage, like DB passwords etc.
+
+Document:
+Create script which you want to run in automation----
+
+Create association:
+Give reference of document created and give tags in target...
+
+Attach the tag to EC2 instances....
+
+AWSCONFIG - Rules - Like tag is mandatory to be created on new EC2 instances...Otherwise 
+
+CloudFormation - UpdateStacks - will pick changes done in EC2 templates...
+
+Usually templates hold all tags to be created for instances..
+
+
+CloudTrail -- Logs everthing done by user... ---Security team
+
+
+
+
+
+
+Route53:
+Two records created:
+NS
+SOA - Start of authority record.
+
+
+HealthCheck:
+Endpoint/Calculated health check/Cloudwatch alarm
+
+IP address/Domain
+
+HTTP/HTTPS/TCP
+
+Request interval:
+Standard - 30 secs, Fast - 10 secs
+
+Multiple policies in single IAM role - but there is a limit - 25
+
+
+
+AWS backup:
+
+Vault - Encryption
+
+Backup plan - Daily, weekly, monthly, hourly. Resource assignment based on tags.
+
+Snapshot - Volume or Instance, take backup and use further.
+
+Backup/snapshot can be attached in same region only.... First copy to different region and then restore in some instance...
+
+S3 - bucket cost, transfer cost---
+
+1 snapshot - multiple volumes and then attach in multiple ec2 instances...
+
+Salt/Ansible
+
+Automation based on tags - Attach volume, and mount....
+
+Put shell script in S3, then call it throufh JSON (SSM)
+
+
+
+AWS Beanstalk - Ec2,volume, VPC, auto-scaling, DNS, LB, subnet - Proxy server attached *Nginx-Apache
+Can control all parameters...
+Application versions
+
+Amazon CodeGuru
+Profiling groups -- 
+Analyzing instances at runtime - thread dumps etc
+Automation through S3
+
+AWS Lambda
+S3---
+Versioning
+Aliases - Name of different versions...
+
+Monitor - logs
+Test - 
+Triggering
+
+
+SQS - Event - Lambda
+Dead-letter to be created before...
+
+EventBridge - Triggering based on events...
+
+SNS - Notification service
+
+IAM - Watch actions and add in Role.
+
+aws configure --profile vivek
+Access Key ID
+Secret access key
+Region
+
+DenyAll
+armEquals - VivekARN to allow
+
+"Sid": "DenyAllExceptSingleUser",
+            "Effect": "Deny",
+            "NotPrincipal": {
+                "AWS": [
+                    "arn:aws:iam::111122223333:user/AllowedUserName",
+                    "arn:aws:iam::111122223333:root"
+                ]
+            },
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::your-bucket-name",
+                "arn:aws:s3:::your-bucket-name/*"
+
+Amazon Congnito
+----Amazon based AD
+
+
+
+Show creation of a AWS config rule...
+AWS backup - worked
+AWS beanstalk worked --- How IP works, public IP how|||| Health issue........
+
+
+Cloud front/CloudFlare - TRY
+
+
+GitFlow/Waterfall
+
+Build number - Rollback
+Offcycle/BugFix
+
+Github branching strategy - Trunk, 
+Github deployment strategy
+Blue/Green
+Canary deployment - Zero downtime usage.
+Rolling deployment
+Feature Flags
+
+
