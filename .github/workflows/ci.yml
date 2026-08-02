@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: us-east-1                   # Replace with your ECR AWS region
-  ECR_REPOSITORY: 124280777176.dkr.ecr.us-east-1.amazonaws.com/gitactions        # Replace with your ECR repository name
+  ECR_REPOSITORY: gitactions        # Replace with your ECR repository name
 
 jobs:
   build-and-push:
