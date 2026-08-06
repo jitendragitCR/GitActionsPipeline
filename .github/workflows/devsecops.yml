@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 env:
   AWS_REGION: us-east-1                    # Your ECR AWS region
-  ECR_REPOSITORY: my-java-app-repo        # Your ECR repository name
+  ECR_REPOSITORY: gitactions        # Your ECR repository name
 
 jobs:
   build-and-push:
